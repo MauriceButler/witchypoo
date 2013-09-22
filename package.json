@@ -4,7 +4,7 @@
   "description": "Stores a unique list of domain names and their page rank at time of crawling",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node tests/tests.js"
   },
   "repository": {
     "type": "git",
@@ -20,10 +20,14 @@
     "unique",
     "domain"
   ],
+  "devDependencies" : {
+    "tape" : "1.1.x"
+  },
   "dependencies": {
     "commander": "2.0.x",
     "hansel": "0.0.x",
-    "gretel": "0.0.x"
+    "gretel": "0.0.x",
+    "mongoose" : "3.6.x"
   },
   "author": "Maurice Butler <maurice.butler@gmail.com>",
   "license": "MIT",
