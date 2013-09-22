@@ -1,0 +1,36 @@
+{
+  "name": "witchypoo",
+  "version": "0.0.0",
+  "description": "Stores a unique list of domain names and their page rank at time of crawling",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/MauriceButler/witchypoo.git"
+  },
+  "keywords": [
+    "web",
+    "crawl",
+    "page",
+    "rank",
+    "hansel",
+    "gretel",
+    "unique",
+    "domain"
+  ],
+  "dependencies": {
+    "commander": "2.0.x",
+    "hansel": "0.0.x",
+    "gretel": "0.0.x"
+  },
+  "author": "Maurice Butler <maurice.butler@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MauriceButler/witchypoo/issues"
+  },
+  "bin": {
+    "witchypoo": "./index.js"
+  }
+}
