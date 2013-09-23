@@ -2,8 +2,10 @@
 
 var program = require('commander'),
     packageJson = require('./package.json'),
+    db = require('./database'),
     hansel = require('hansel'),
-    gretel;
+    gretel,
+    seenDomains;
 
 function list(value) {
     return value.split(',') || [];
@@ -34,8 +36,7 @@ function setupGretel(){
     gretel = require('gretel')(program.startUris);
 
     process.on( 'SIGINT', function() {
-        console.log( "Saving breadcrumbs for later..." );
-        gretel.queue.freeze(program.queuePath, function(error){
+        gretel.save(program.queuePath, function(error){
             if(error){
                 console.log(error.stack || error);
                 process.exit(1);
@@ -49,6 +50,7 @@ function setupGretel(){
     });
 
     gretel.on('fetchcomplete', function(queueItem, data, response) {
+        seenDomains
         passToHansel(queueItem.host);
     });
 
@@ -61,4 +63,28 @@ function setupGretel(){
     });
 }
 
-setupGretel();
+function loadDomains(callback){
+    console.log( "Loading recorded domains..." );
+    db.Domain.find({}, 'uri', function(error, domains){
+        if(error){
+            return callback(error);
+        }
+
+        async.map(
+            domains,
+            function(domain, callback){
+                seenDomains[domain.uri] = true;
+                callback();
+            },
+            callback);
+    });
+}
+
+loadDomains(function(error){
+    if(error){
+        console.log(error.stack || error);
+        return process.exit(1);
+    }
+
+    setupGretel();
+});

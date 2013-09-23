@@ -27,7 +27,8 @@
     "commander": "2.0.x",
     "hansel": "0.0.x",
     "gretel": "0.0.x",
-    "mongoose" : "3.6.x"
+    "mongoose" : "3.6.x",
+    "async": "0.2.x"
   },
   "author": "Maurice Butler <maurice.butler@gmail.com>",
   "license": "MIT",
