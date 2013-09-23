@@ -86,6 +86,7 @@ function saveDomains(results){
     async.map(
         results,
         function(result, callback){
+            console.log(result)
             db.Domain.update({uri: result.uri}, result, {upsert: true}, callback);
         },
         function(error){
@@ -96,11 +97,17 @@ function saveDomains(results){
     );
 }
 
-loadDomains(function(error){
-    if(error){
-        console.log(error.stack || error);
-        return process.exit(1);
-    }
+try {
+    loadDomains(function(error){
+        if(error){
+            console.log(error.stack || error);
+            return process.exit(1);
+        }
 
-    setupGretel();
-});
+        setupGretel();
+    });
+
+} catch(exception) {
+    console.log(exception.stack || exception);
+    gretel.save(program.queuePath);
+}
