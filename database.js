@@ -1,7 +1,6 @@
 (function () {
 
     var config = require('./config.json'),
-        lastModifiedPlugin = require('./lastModifiedPlugin'),
         dbObject = {},
         mongoose = require('mongoose'),
         db = mongoose.connection,
@@ -10,9 +9,6 @@
                 pageRank: Number,
                 outputGenerated: { type: Boolean, 'default': false }
             });
-
-
-    domainSchema.plugin(lastModifiedPlugin, { index: true });
 
     db.on('error', function(error) {
         console.log(error.stack || error);
