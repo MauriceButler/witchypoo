@@ -1,6 +1,6 @@
-(function () {
+module.exports = function(connectionString) {
 
-    var config = require('./config.json'),
+    var config = {},
         dbObject = {},
         mongoose = require('mongoose'),
         db = mongoose.connection,
@@ -9,6 +9,12 @@
                 pageRank: Number,
                 outputGenerated: { type: Boolean, 'default': false }
             });
+
+    if(connectionString){
+        config.mongooseConnection = connectionString;
+    } else {
+        config = require('./config.json');
+    }
 
     db.on('error', function(error) {
         console.log(error.stack || error);
@@ -19,4 +25,4 @@
 
     module.exports = dbObject;
 
-}());
+};

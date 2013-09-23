@@ -3,10 +3,10 @@
 var program = require('commander'),
     packageJson = require('./package.json'),
     async = require('async'),
-    db = require('./database'),
     hansel = require('hansel'),
+    seenDomains = {},
     gretel,
-    seenDomains = {};
+    db;
 
 function list(value) {
     return value.split(',') || [];
@@ -17,6 +17,7 @@ program
     .version(packageJson.version)
     .option('-s, --startUris <uris>', 'Uri(s) to start crawling from', list)
     .option('-q, --queuePath [filePath]', 'File path to load / save queue from')
+    .option('-d, --connectionString [connectionString]', 'Database connection string')
     .parse(process.argv);
 
 if(!program.queuePath){
@@ -66,6 +67,8 @@ function setupGretel(){
 }
 
 function loadDomains(callback){
+    db = require('./database')(program.connectionString);
+
     console.log( "Loading recorded domains..." );
     db.Domain.find({}, 'uri', function(error, domains){
         if(error){
@@ -86,7 +89,7 @@ function saveDomains(results){
     async.map(
         results,
         function(result, callback){
-            console.log(result)
+            console.log(result);
             db.Domain.update({uri: result.uri}, result, {upsert: true}, callback);
         },
         function(error){
