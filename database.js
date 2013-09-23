@@ -23,6 +23,6 @@ module.exports = function(connectionString) {
     dbObject.Domain = mongoose.model('Domain', domainSchema);
     dbObject.connection = mongoose.connect(config.mongooseConnection);
 
-    module.exports = dbObject;
+    return dbObject;
 
 };
