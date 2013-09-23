@@ -28,8 +28,6 @@ function passToHansel(uris){
         if(error){
             return console.log(error.stack || error);
         }
-
-        console.log(results);
         saveDomains(results);
     });
 }
