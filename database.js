@@ -7,6 +7,8 @@ module.exports = function(connectionString) {
         domainSchema = mongoose.Schema({
                 uri: String,
                 pageRank: Number,
+                isValid: { type: Boolean, 'default': false },
+                isSafe: { type: Boolean, 'default': false },
                 outputGenerated: { type: Boolean, 'default': false }
             });
 

@@ -1,6 +1,6 @@
 {
   "name": "witchypoo",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Stores a unique list of domain names and their page rank at time of crawling",
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,8 @@
     "hansel": "0.0.x",
     "gretel": "0.0.x",
     "mongoose" : "3.6.x",
-    "async": "0.2.x"
+    "async": "0.2.x",
+    "badwords": "MauriceButler/badwords"
   },
   "author": "Maurice Butler <maurice.butler@gmail.com>",
   "license": "MIT",

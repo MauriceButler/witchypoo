@@ -2,8 +2,11 @@
 
 var program = require('commander'),
     packageJson = require('./package.json'),
+    http = require('http'),
+    https = require('https'),
     async = require('async'),
     hansel = require('hansel'),
+    badwords = require('badwords/regexp'),
     seenDomains = {},
     gretel,
     db;
@@ -24,12 +27,45 @@ if(!program.queuePath){
     program.queuePath = 'breadcrumbs.json';
 }
 
-function passToHansel(uris){
-    hansel.getPageRank(uris, function(error, results) {
+function passToHansel(domainObject){
+    hansel.getPageRank(domainObject.uri, function(error, results) {
         if(error){
             return console.log(error.stack || error);
         }
-        saveDomains(results);
+        domainObject.pageRank = results[0].pageRank;
+        saveDomain(domainObject);
+    });
+}
+
+function validateResponceLength(queueItem, response, callback){
+    var client = queueItem.protocol === 'https' ? https : http;
+
+    client.get(queueItem.protocol + '://' + queueItem.host, function(response) {
+        response.on("data", function(chunk) {
+            response.pause();
+            response.destroy();
+            callback(chunk.length > 100);
+        });
+    });
+}
+
+function validateSafeness(data, callback){
+    var html = data.toString();
+    callback(!html.match(badwords));
+}
+
+function validateDomain(queueItem, data, response){
+    validateResponceLength(queueItem, response, function(isValid){
+        validateSafeness(data, function(isSafe){
+            passToHansel(
+                {
+                    uri: queueItem.host,
+                    isValid: isValid,
+                    isSafe: isSafe,
+                    responeCode: response.statusCode
+                }
+            );
+        });
     });
 }
 
@@ -53,7 +89,7 @@ function setupGretel(){
     gretel.on('fetchcomplete', function(queueItem, data, response) {
         if(!seenDomains[queueItem.host]){
             seenDomains[queueItem.host] = true;
-            passToHansel(queueItem.host);
+            validateDomain(queueItem, data, response);
         }
     });
 
@@ -85,25 +121,20 @@ function loadDomains(callback){
     });
 }
 
-function saveDomains(results){
-    async.map(
-        results,
-        function(result, callback){
-            console.log(result);
-            db.Domain.update({uri: result.uri}, result, {upsert: true}, callback);
-        },
-        function(error){
-            if(error){
-                console.log(error.stack || error);
-            }
+function saveDomain(domainObject){
+    console.log(domainObject);
+    db.Domain.update({uri: domainObject.uri}, domainObject, {upsert: true}, function(error){
+        if(error){
+            console.log(error.stack || error);
         }
-    );
+    });
 }
 
 try {
     loadDomains(function(error){
         if(error){
             console.log(error.stack || error);
+            console.log('EXITING PROCESS');
             return process.exit(1);
         }
 
@@ -113,4 +144,6 @@ try {
 } catch(exception) {
     console.log(exception.stack || exception);
     gretel.save(program.queuePath);
+    console.log('EXITING PROCESS');
+    return process.exit(1);
 }
