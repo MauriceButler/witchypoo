@@ -99,7 +99,7 @@ test('hasBeenSeen', function (t) {
     t.ok(witchypoo.hasBeenSeen, 'witchypoo.hasBeenSeen Exists');
     t.equal(typeof witchypoo.hasBeenSeen, 'function', 'witchypoo.hasBeenSeen is a function');
     t.notOk(witchypoo.hasBeenSeen({host: 'google.com'}), 'handels never seen');
-    t.ok(witchypoo.hasBeenSeen({host: 'api.google.com'}), 'handels non whiteList subdomain on seen');
+    t.notOk(witchypoo.hasBeenSeen({host: 'api.google.com'}), 'handels non whiteList subdomain on seen');
     t.notOk(witchypoo.hasBeenSeen({host: 'www.google.com'}), 'handels whiteList subdomain on seen');
     t.notOk(witchypoo.hasBeenSeen({host: 'foo.com'}), 'handels new whitelist domain');
     t.notOk(witchypoo.hasBeenSeen({host: 'blog.foo.com'}), 'handels new whitelist subdomain on whitelist seen');
