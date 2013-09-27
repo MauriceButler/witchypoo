@@ -87,7 +87,7 @@ test('WhiteLists', function (t) {
 });
 
 test('hasBeenSeen', function (t) {
-    t.plan(9);
+    t.plan(11);
 
     setupWhiteLists();
     var witchypoo = getCleanTestObject();
@@ -98,10 +98,15 @@ test('hasBeenSeen', function (t) {
 
     t.ok(witchypoo.hasBeenSeen, 'witchypoo.hasBeenSeen Exists');
     t.equal(typeof witchypoo.hasBeenSeen, 'function', 'witchypoo.hasBeenSeen is a function');
+
     t.notOk(witchypoo.hasBeenSeen({host: 'google.com'}), 'handels never seen');
-    t.notOk(witchypoo.hasBeenSeen({host: 'api.google.com'}), 'handels non whiteList subdomain on seen');
+    t.ok(witchypoo.hasBeenSeen({host: 'google.com'}), 'handels seen');
+
     t.notOk(witchypoo.hasBeenSeen({host: 'www.google.com'}), 'handels whiteList subdomain on seen');
+    t.ok(witchypoo.hasBeenSeen({host: 'api.google.com'}), 'handels non whiteList subdomain on seen');
+
     t.notOk(witchypoo.hasBeenSeen({host: 'foo.com'}), 'handels new whitelist domain');
+    t.ok(witchypoo.hasBeenSeen({host: 'foo.com'}), 'handels seen whitelist domain');
     t.notOk(witchypoo.hasBeenSeen({host: 'blog.foo.com'}), 'handels new whitelist subdomain on whitelist seen');
     t.notOk(witchypoo.hasBeenSeen({host: 'majigger.foo.com'}), 'handels new non whitelist subdomain on whitelist seen');
 });

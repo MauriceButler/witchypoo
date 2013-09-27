@@ -77,6 +77,12 @@ module.exports = function (program) {
             return false;
         }
 
+        for (var i = 0; i < seenDomains.length; i++) {
+            isWhiteListSubDomain(queueItem.host, seenDomains[i])
+        }
+
+
+        seenDomains[queueItem.host] = true;
         return false;
     }
 
