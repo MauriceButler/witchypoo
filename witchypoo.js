@@ -172,7 +172,7 @@ module.exports = function (program) {
 
     function loadWhiteLists(callback){
         console.log( "Loading white lists..." );
-        db.WhiteList.find({}, 'uri', function(error, lists){
+        db.WhiteList.find({}, 'whiteListType whiteList', function(error, lists){
             if(error){
                 return callback(error);
             }
