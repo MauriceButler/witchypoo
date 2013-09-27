@@ -49,6 +49,20 @@ module.exports = function (program) {
         return isWhiteListed;
     }
 
+    function isInvalidSubDomain(host){
+        var isInvalid = false,
+            keys = Object.keys(seenDomains);
+
+        for (var i = 0; i < keys.length; i++) {
+            if(isSubdomainOf(keys[i], host)){
+                isInvalid =  true;
+                break;
+            }
+        }
+
+        return isInvalid;
+    }
+
     function isWhiteListSubDomain(host){
         var isWhiteListed = false;
 
@@ -67,20 +81,15 @@ module.exports = function (program) {
             return true;
         }
 
-        if(isWhiteListDomain(queueItem.host)){
+        if(isWhiteListDomain(queueItem.host) || isWhiteListSubDomain(queueItem.host)){
             seenDomains[queueItem.host] = true;
             return false;
         }
 
-        if(isWhiteListSubDomain(queueItem.host)){
+        if(isInvalidSubDomain(queueItem.host)){
             seenDomains[queueItem.host] = true;
-            return false;
+            return true;
         }
-
-        for (var i = 0; i < seenDomains.length; i++) {
-            isWhiteListSubDomain(queueItem.host, seenDomains[i])
-        }
-
 
         seenDomains[queueItem.host] = true;
         return false;
