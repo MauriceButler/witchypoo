@@ -39,5 +39,5 @@ try {
     });
 
 } catch(exception) {
-    witchypoo.exitProcessWithError(error);
+    witchypoo.exitProcessWithError(exception);
 }
