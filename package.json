@@ -1,6 +1,6 @@
 {
   "name": "witchypoo",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Stores a unique list of domain names and their page rank at time of crawling",
   "main": "index.js",
   "scripts": {
